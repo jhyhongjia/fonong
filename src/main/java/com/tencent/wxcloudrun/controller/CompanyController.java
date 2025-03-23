@@ -8,17 +8,24 @@ import com.tencent.wxcloudrun.vo.CompanyVO;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
 public class CompanyController {
     private final CompanyService companyService;
 
-    @PostMapping(value = "/company/import")
-    public void importExcel(MultipartFile multipartFile, Long serviceId) {
-        companyService.importExcel(multipartFile,serviceId);
+    /**
+     * 导入
+     */
+    @PostMapping("/company/import")
+    public void importExcel(MultipartFile multipartFile) {
+        companyService.importExcel(multipartFile,null);
     }
 
     @GetMapping(value = "/company/page")
@@ -27,5 +34,13 @@ public class CompanyController {
         IPage<CompanyEntity> companyEntityIPage = companyService.selectCompanyPage(page, null);
         return companyEntityIPage;
     }
+
+    @PostMapping(value = "/company/getByLongitudeAndLatitude")
+    public List<CompanyEntity> getCompanyByLongitudeAndLatitude(@RequestBody CompanyVO companyVO) {
+        List<CompanyEntity> companyEntityIPage = companyService.selectCompanyListByLongitudeAndLatitude(companyVO.getNortheast(), companyVO.getSouthwest());
+        return companyEntityIPage;
+    }
+
+
 
 }

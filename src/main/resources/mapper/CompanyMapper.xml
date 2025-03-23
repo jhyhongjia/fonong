@@ -2,11 +2,32 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.tencent.wxcloudrun.dao.CompanyMapper">
 
-    <select id="selectCompanyPage" resultType="com.tencent.wxcloudrun.vo.CompanyVO">
+    <select id="selectCompanyPage" resultType="com.tencent.wxcloudrun.entity.CompanyEntity">
         select * from company
     </select>
-    <select id="selectCompanyByGender" resultType="com.tencent.wxcloudrun.entity.CompanyEntity">
+
+    <select id="selectCompanyList" resultType="com.tencent.wxcloudrun.entity.CompanyEntity">
         select * from company
+        where 1=1
+        <if test="custName != null and custName != ''">
+            and cust_name like concat('%', #{custName}, '%')
+        </if>
+    </select>
+    <select id="selectCompanyByLongitudeAndLatitude" resultType="com.tencent.wxcloudrun.entity.CompanyEntity">
+        select * from company
+        where 1=1
+        <if test="longtitudeNortheast != null and longtitudeNortheast != ''">
+            and longitude &lt; #{longtitudeNortheast}
+        </if>
+        <if test="longtitudeSouthwest != null and longtitudeSouthwest != ''">
+            and longitude > #{longtitudeSouthwest}
+        </if>
+        <if test="latitudeNortheast != null and latitudeNortheast != ''">
+            and latitude &lt; #{latitudeNortheast}
+        </if>
+        <if test="latitudeSouthwest != null and latitudeSouthwest != ''">
+            and latitude > #{latitudeSouthwest}
+        </if>
     </select>
 
 </mapper>

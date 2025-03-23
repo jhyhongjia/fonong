@@ -11,8 +11,13 @@ import java.util.List;
 
 public interface CompanyMapper extends BaseMapper<CompanyEntity> {
 
-    List<CompanyVO> selectCompanyPage(IPage page, CompanyVO companyVO);
+    IPage<CompanyEntity> selectCompanyPage(Page<CompanyEntity> page, CompanyVO companyVO);
 
-    IPage<CompanyEntity> selectCompanyByGender(Page<CompanyEntity> page, CompanyVO companyVO);
+    List<CompanyEntity> selectCompanyList(CompanyVO companyVO);
+
+    List<CompanyEntity> selectCompanyByLongitudeAndLatitude(Double longtitudeNortheast,
+    Double longtitudeSouthwest,
+    Double latitudeNortheast,
+    Double latitudeSouthwest);
 
 }
