@@ -29,9 +29,9 @@ public class CompanyController {
     }
 
     @GetMapping(value = "/company/page")
-    public IPage<CompanyEntity> page(Integer pageNum, Integer pageSize) {
-        Page<CompanyEntity> page = new Page<>(pageNum, pageSize);
-        IPage<CompanyEntity> companyEntityIPage = companyService.selectCompanyPage(page, null);
+    public IPage<CompanyEntity> page(@RequestBody CompanyVO companyVO) {
+        Page<CompanyEntity> page = new Page(companyVO.getPageNum(), companyVO.getPageSize());
+        IPage<CompanyEntity> companyEntityIPage = companyService.selectCompanyPage(page, companyVO);
         return companyEntityIPage;
     }
 

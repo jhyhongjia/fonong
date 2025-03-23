@@ -13,4 +13,6 @@ public class CompanyVO extends CompanyEntity {
     Double latitudeSouthwest;
     Map<String,Double> northeast;
     Map<String,Double> southwest;
+    Integer pageNum;
+    Integer pageSize;
 }

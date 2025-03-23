@@ -4,6 +4,18 @@
 
     <select id="selectCompanyPage" resultType="com.tencent.wxcloudrun.entity.CompanyEntity">
         select * from company
+        <where>
+            <if test="companyVO.custName!= null and companyVO.custName!= ''">
+                and cust_name like concat('%', #{companyVO.custName}, '%')
+            </if>
+            <if test="companyVO.businessStatus!= null and companyVO.businessStatus!= ''">
+                and business_status like concat('%', #{companyVO.businessStatus}, '%')
+            </if>
+            <if test="companyVO.industryCategory!= null and companyVO.industryCategory!= ''">
+                and industry_category like concat('%', #{companyVO.industryCategory}, '%')
+            </if>
+        </where>
+
     </select>
 
     <select id="selectCompanyList" resultType="com.tencent.wxcloudrun.entity.CompanyEntity">
