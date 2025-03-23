@@ -13,6 +13,6 @@ public interface CompanyMapper extends BaseMapper<CompanyEntity> {
 
     List<CompanyVO> selectCompanyPage(IPage page, CompanyVO companyVO);
 
-    List<CompanyVO> selectCompanyByGender(Page<CompanyEntity> page, CompanyVO companyVO);
+    IPage<CompanyEntity> selectCompanyByGender(Page<CompanyEntity> page, CompanyVO companyVO);
 
 }

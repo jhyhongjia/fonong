@@ -1,6 +1,8 @@
 package com.tencent.wxcloudrun.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.tencent.wxcloudrun.entity.CompanyEntity;
 import com.tencent.wxcloudrun.service.CompanyService;
 import com.tencent.wxcloudrun.vo.CompanyVO;
 import lombok.AllArgsConstructor;
@@ -20,9 +22,10 @@ public class CompanyController {
     }
 
     @GetMapping(value = "/company/page")
-    public void page(Integer pageNum, Integer pageSize) {
-        Page<CompanyVO> page = new Page<>(pageNum, pageSize);
-        companyService.selectCompanyPage(page,null);
+    public IPage<CompanyEntity> page(Integer pageNum, Integer pageSize) {
+        Page<CompanyEntity> page = new Page<>(pageNum, pageSize);
+        IPage<CompanyEntity> companyEntityIPage = companyService.selectCompanyPage(page, null);
+        return companyEntityIPage;
     }
 
 }

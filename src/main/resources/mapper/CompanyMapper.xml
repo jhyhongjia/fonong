@@ -5,8 +5,8 @@
     <select id="selectCompanyPage" resultType="com.tencent.wxcloudrun.vo.CompanyVO">
         select * from company
     </select>
-    <select id="selectCompanyByGender" resultType="com.tencent.wxcloudrun.vo.CompanyVO">
-
+    <select id="selectCompanyByGender" resultType="com.tencent.wxcloudrun.entity.CompanyEntity">
+        select * from company
     </select>
 
 </mapper>

@@ -1,6 +1,8 @@
 package com.tencent.wxcloudrun.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.tencent.wxcloudrun.entity.CompanyEntity;
 import com.tencent.wxcloudrun.excel.CompanyExcel;
 import com.tencent.wxcloudrun.dao.CompanyMapper;
 import com.tencent.wxcloudrun.service.CompanyService;
@@ -19,8 +21,9 @@ public class CompanyServiceImpl implements CompanyService {
 //
 //    private static final ThreadLocal<List<EmployeeImportErrorExcel>> errorListThreadLocal;
     @Override
-    public IPage<CompanyVO> selectCompanyPage(IPage<CompanyVO> page, CompanyVO companyVO) {
-        return page.setRecords(companyMapper.selectCompanyPage(page, companyVO));
+    public IPage<CompanyEntity> selectCompanyPage(Page<CompanyEntity> page, CompanyVO companyVO) {
+//        return page.setRecords(companyMapper.selectCompanyPage(page, companyVO));
+        return companyMapper.selectCompanyByGender(page, companyVO);
     }
 
     @Override
