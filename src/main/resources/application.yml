@@ -1,17 +1,18 @@
 server:
-  port: 80
-
-
+  port: 8099
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${MYSQL_ADDRESS}/${MYSQL_DATABASE:springboot_demo}
-    username: ${MYSQL_USERNAME}
-    password: ${MySQL_PASSWORD}
-  mvc:
-    view:
-      suffix: .html
-      prefix: /
-
-mybatis:
+    url: jdbc:mysql://sh-cynosdbmysql-grp-gw270rga.sql.tencentcdb.com:23245/springboot_demo?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true
+    username: root
+    password: Gedi_1994520
+#  main:
+#    allow-bean-definition-overriding: true
+#  mvc:
+#    view:
+#      suffix: .html
+#      prefix: /
+#mybatis-plus:
+#  mapper-locations: classpath:com/tencent/wxcloudrun/mapper/*Mapper.xml
+mybatis-plus:
   mapper-locations: classpath*:mapper/*Mapper.xml
