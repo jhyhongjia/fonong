@@ -3,11 +3,10 @@ package com.tencent.wxcloudrun.service.impl;
 import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.tencent.wxcloudrun.dao.CompanyMapper;
 import com.tencent.wxcloudrun.entity.CompanyEntity;
 import com.tencent.wxcloudrun.excel.CompanyExcel;
-import com.tencent.wxcloudrun.dao.CompanyMapper;
 import com.tencent.wxcloudrun.excel.CompanyImportListener;
 import com.tencent.wxcloudrun.service.CompanyService;
 import com.tencent.wxcloudrun.vo.CompanyVO;
@@ -148,6 +147,25 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper,CompanyEntity>
         }
         return null;
     }
+
+//    private List<CompanyVO> wrapper(List<CompanyVO> companyList){
+//        List<CompanyVO> collect = companyList.stream().map(companyEntity -> {
+//            if(Objects.nonNull(companyEntity.getEstablishmentDate())){
+//                companyEntity.setEstablishmentDateStr(formatDate(companyEntity.getEstablishmentDate()));
+//            }
+//            return companyEntity;
+//        }).collect(Collectors.toList());
+//        return collect;
+//    }
+
+//    public String formatDate(Date date) {
+//        // 将 Date 转换为 LocalDate
+//        LocalDate localDate = date.toInstant().atZone(TimeZone.getDefault().toZoneId()).toLocalDate();
+//        // 定义日期格式
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//        // 格式化日期
+//        return localDate.format(formatter);
+//    }
 
 
 }

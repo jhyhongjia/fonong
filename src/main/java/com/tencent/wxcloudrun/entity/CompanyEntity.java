@@ -3,8 +3,6 @@ package com.tencent.wxcloudrun.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
-import java.util.Date;
-
 @Data
 @TableName("company")
 public class CompanyEntity {
@@ -25,7 +23,7 @@ public class CompanyEntity {
     //	private Integer businessStatus; // 经营状态
     private String businessStatus; // 经营状态
     private String legalRepresentative; // 法定代表人
-    private Date establishmentDate; // 成立时间
+    private String establishmentDate; // 成立时间
     private Float registeredCapital; // 注册资本
     private Integer employeeCount; // 员工数
     private String creditCode; // 统一社会信用代码

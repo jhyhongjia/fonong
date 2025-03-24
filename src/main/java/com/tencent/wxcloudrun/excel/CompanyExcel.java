@@ -29,7 +29,7 @@ public class CompanyExcel implements Serializable {
     private String legalRepresentative;
 
     @ExcelProperty(value = {"成立时间"}, index = 4)
-    private Date establishmentDate;
+    private String establishmentDate;
 
     @ExcelProperty(value = {"注册资本"}, index = 5)
     private Float registeredCapital;
