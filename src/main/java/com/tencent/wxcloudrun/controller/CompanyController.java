@@ -28,7 +28,7 @@ public class CompanyController {
         companyService.importExcel(multipartFile,null);
     }
 
-    @GetMapping(value = "/company/page")
+    @PostMapping(value = "/company/page")
     public IPage<CompanyEntity> page(@RequestBody CompanyVO companyVO) {
         Page<CompanyEntity> page = new Page(companyVO.getPageNum(), companyVO.getPageSize());
         IPage<CompanyEntity> companyEntityIPage = companyService.selectCompanyPage(page, companyVO);
