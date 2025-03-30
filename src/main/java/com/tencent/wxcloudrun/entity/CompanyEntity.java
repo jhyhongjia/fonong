@@ -50,6 +50,28 @@ public class CompanyEntity {
     private String recentCaseInfo; // 近两年立案信息
     private Integer recentAdminPenaltyCount; // 近连年行政处罚次数
 
+    /** 土地面积（亩） */
+    private Double landArea;
+
+    /** 厂房面积（亩） */
+    private Double factoryArea;
+
+    /** 厂房产权（自有/租赁/混合） */
+    private String factoryOwnership;
+
+    /** 近一年营收（万元） */
+    private Double lastYearRevenue;
+
+    /** 近一年利润（万元） */
+    private Double lastYearProfit;
+
+    /** 产业链节点（原材料/半成品/成品/混合） */
+    private String industryChainNode;
+
+    /** 进出口量（美元/万元） */
+    private Double importAndExportVolume;
+
+
 
 
 

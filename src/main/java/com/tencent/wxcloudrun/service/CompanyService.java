@@ -3,6 +3,7 @@ package com.tencent.wxcloudrun.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.tencent.wxcloudrun.dto.CompanyDTO;
 import com.tencent.wxcloudrun.entity.CompanyEntity;
 import com.tencent.wxcloudrun.vo.CompanyVO;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,5 +25,7 @@ public interface CompanyService extends IService<CompanyEntity> {
     boolean deleteCompanyList(List<Long> ids);
 
     List<CompanyEntity> setLatitudeAndLongitude(List<CompanyEntity> companyList);
+
+    boolean updateCompany(CompanyDTO companyEntity);
 
 }

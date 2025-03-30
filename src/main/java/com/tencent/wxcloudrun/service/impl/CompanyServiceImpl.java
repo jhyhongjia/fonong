@@ -2,9 +2,11 @@ package com.tencent.wxcloudrun.service.impl;
 
 import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tencent.wxcloudrun.dao.CompanyMapper;
+import com.tencent.wxcloudrun.dto.CompanyDTO;
 import com.tencent.wxcloudrun.entity.CompanyEntity;
 import com.tencent.wxcloudrun.excel.CompanyExcel;
 import com.tencent.wxcloudrun.excel.CompanyImportListener;
@@ -28,15 +30,18 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
+
 
 @Service
 @AllArgsConstructor
 public class CompanyServiceImpl extends ServiceImpl<CompanyMapper,CompanyEntity> implements CompanyService {
     private final CompanyMapper companyMapper;
     // 定义线程池，限制并发数为 3
-    private static final ExecutorService executorService = Executors.newFixedThreadPool(2);
+//    private static final ExecutorService executorService = Executors.newFixedThreadPool(2);
     private static final Semaphore semaphore = new Semaphore(3);
+    private static final int RANDOM_BITS = 4; // 最后4位随机数
     @Override
     public IPage<CompanyEntity> selectCompanyPage(Page<CompanyEntity> page, CompanyVO companyVO) {
 //        return page.setRecords(companyMapper.selectCompanyPage(page, companyVO));
@@ -69,6 +74,8 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper,CompanyEntity>
         }
     }
 
+
+
     @Override
     public boolean deleteCompany(Long id) {
         if (id != null) {
@@ -91,6 +98,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper,CompanyEntity>
         String city = "佛山";
 //        List<CompanyEntity> companyEntities = companyMapper.selectCompanyList(null);
         List<CompanyEntity> collect = companyList.stream().map(companyEntity -> {
+            companyEntity.setId(generate());
             try {
                 semaphore.acquire();
                 Map<String, String> latitudeAndLongitude = getLatitudeAndLongitude(url, key, companyEntity.getRegisteredAddress(), city);
@@ -104,6 +112,11 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper,CompanyEntity>
             return companyEntity;
         }).collect(Collectors.toList());
         return collect;
+    }
+
+    @Override
+    public boolean updateCompany(CompanyDTO companyEntity) {
+        return updateById(companyEntity);
     }
 
     private Map<String, String> getLatitudeAndLongitude(String url,String key,String address,String city) {
@@ -146,6 +159,14 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper,CompanyEntity>
             }
         }
         return null;
+    }
+
+
+
+    private long generate() {
+        long timestampPart = (System.currentTimeMillis() % 10_000_000_000L) * 100; // 取时间戳后10位
+        long randomPart = ThreadLocalRandom.current().nextInt(1 << RANDOM_BITS);
+        return timestampPart + randomPart; // 10+2=12位
     }
 
 //    private List<CompanyVO> wrapper(List<CompanyVO> companyList){

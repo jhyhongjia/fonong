@@ -2,6 +2,7 @@ package com.tencent.wxcloudrun.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.tencent.wxcloudrun.dto.CompanyDTO;
 import com.tencent.wxcloudrun.entity.CompanyEntity;
 import com.tencent.wxcloudrun.service.CompanyService;
 import com.tencent.wxcloudrun.vo.CompanyVO;
@@ -39,6 +40,11 @@ public class CompanyController {
     public List<CompanyEntity> getCompanyByLongitudeAndLatitude(@RequestBody CompanyVO companyVO) {
         List<CompanyEntity> companyEntityIPage = companyService.selectCompanyListByLongitudeAndLatitude(companyVO.getNortheast(), companyVO.getSouthwest());
         return companyEntityIPage;
+    }
+
+    @PostMapping(value = "/company/updateCompany")
+    public Boolean updateCompany(@RequestBody CompanyDTO company) {
+        return companyService.updateCompany(company);
     }
 
 
