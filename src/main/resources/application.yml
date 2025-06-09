@@ -1,5 +1,21 @@
 server:
   port: 8099
+#  key-store-type: PKCS12
+#  key-store: classpath:keystore.p12 # classpath: 是一个前缀，用于指示 Spring 从类路径（src/main/resources）中加载资源
+#  key-store-password: fonong94520
+#  key-alias: fonongyhj
+#  ssl:
+#    keyAlias: springboot
+#    keyPassword:  chipxpr6
+##    keyStore: classpath:keystore.jks
+#    keyStore: classpath:www.fo-nong.cn.jks
+#    keyStorePassword: chipxpr6
+#    keyStoreType: JKS
+  ssl:
+    enabled: true
+    key-store: classpath:www.fo-nong.cn.jks
+    key-store-password: chipxpr6
+    keyStoreType: JKS
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver

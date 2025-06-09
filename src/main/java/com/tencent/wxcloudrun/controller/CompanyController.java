@@ -9,10 +9,7 @@ import com.tencent.wxcloudrun.tool.api.R;
 import com.tencent.wxcloudrun.vo.CompanyDetailVO;
 import com.tencent.wxcloudrun.vo.CompanyVO;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -43,6 +40,11 @@ public class CompanyController {
         Page<CompanyEntity> page = new Page(companyVO.getPageNum(), companyVO.getPageSize());
         IPage<CompanyEntity> companyEntityIPage = companyService.selectCompanyPage(page, companyVO);
         return R.data(companyEntityIPage);
+    }
+
+    @GetMapping(value = "/company/getDetail")
+    public R<CompanyEntity> getDetail(@RequestParam Long id) {
+        return R.data(companyService.getById(id));
     }
 
     /**
