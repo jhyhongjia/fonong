@@ -1,4 +1,4 @@
-package com.tencent.wxcloudrun.dao;
+package com.tencent.wxcloudrun.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;

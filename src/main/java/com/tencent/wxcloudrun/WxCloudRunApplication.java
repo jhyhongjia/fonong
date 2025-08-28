@@ -7,7 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.tencent.wxcloudrun"})
-@MapperScan(basePackages = {"com.tencent.wxcloudrun.dao"})
+@MapperScan(basePackages = {"com.tencent.wxcloudrun.mapper"})
 public class WxCloudRunApplication {  
 
   public static void main(String[] args) {

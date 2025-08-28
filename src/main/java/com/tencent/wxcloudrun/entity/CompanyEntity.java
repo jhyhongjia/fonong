@@ -74,9 +74,20 @@ public class CompanyEntity {
     /** 进出口量（美元/万元） */
     private Double importAndExportVolume;
 
+    /**
+     * 是否我行信贷客户
+     */
+    private boolean creditCustomer;
 
+    /**
+     * 主营业务
+     */
+    private String mainBusiness;
 
-
+    /**
+     * 营销建议
+     */
+    private String marketingSuggestions;
 
 
 

@@ -3,9 +3,11 @@ package com.tencent.wxcloudrun.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tencent.wxcloudrun.dto.CompanyDTO;
+import com.tencent.wxcloudrun.dto.LatAndLngDTO;
 import com.tencent.wxcloudrun.entity.CompanyEntity;
 import com.tencent.wxcloudrun.service.CompanyService;
 import com.tencent.wxcloudrun.tool.api.R;
+import com.tencent.wxcloudrun.vo.ClusterCompanyResponseVO;
 import com.tencent.wxcloudrun.vo.CompanyDetailVO;
 import com.tencent.wxcloudrun.vo.CompanyVO;
 import lombok.AllArgsConstructor;
@@ -48,7 +50,7 @@ public class CompanyController {
     }
 
     /**
-     * 查询经纬度
+     * 根据经纬度获取公司列表
      * @param companyVO
      * @return
      */
@@ -56,6 +58,17 @@ public class CompanyController {
     public R<List<CompanyDetailVO>> getCompanyByLongitudeAndLatitude(@RequestBody CompanyVO companyVO) {
         List<CompanyDetailVO> companyEntityIPage = companyService.selectCompanyListByLongitudeAndLatitude(companyVO.getNortheast(), companyVO.getSouthwest());
         return R.data(companyEntityIPage);
+    }
+
+    /**
+     * 根据经纬度获取公司聚合
+     * @param latAndLngDTO
+     * @return
+     */
+    @PostMapping(value = "/company/getCluster")
+    public R<ClusterCompanyResponseVO> getCluster(@RequestBody LatAndLngDTO latAndLngDTO) {
+        ClusterCompanyResponseVO cluster = companyService.getClusterByLongitudeAndLatitude(latAndLngDTO.getNortheast(), latAndLngDTO.getSouthwest(), latAndLngDTO.getViewWidth(), latAndLngDTO.getViewHeight(),latAndLngDTO.getClusterRadius());
+        return R.data(cluster);
     }
 
     @PostMapping(value = "/company/updateCompany")

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.tencent.wxcloudrun.dto.CompanyDTO;
 import com.tencent.wxcloudrun.entity.CompanyEntity;
+import com.tencent.wxcloudrun.vo.ClusterCompanyResponseVO;
 import com.tencent.wxcloudrun.vo.CompanyDetailVO;
 import com.tencent.wxcloudrun.vo.CompanyVO;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +19,14 @@ public interface CompanyService extends IService<CompanyEntity> {
     List<CompanyEntity> selectCompanyList(CompanyVO companyVO);
 
     List<CompanyDetailVO> selectCompanyListByLongitudeAndLatitude(Map<String,Double> northeast, Map<String,Double> southwest);
+
+    /**
+     * 获取公司聚合
+     * @param northeast 东北角
+     * @param southwest 西南角
+     * @return
+     */
+    ClusterCompanyResponseVO getClusterByLongitudeAndLatitude(Map<String,Double> northeast, Map<String,Double> southwest,Integer viewWidth,Integer viewHeight,int clusterRadius);
 
     void importExcel(MultipartFile multipartFile, Long serviceId);
 

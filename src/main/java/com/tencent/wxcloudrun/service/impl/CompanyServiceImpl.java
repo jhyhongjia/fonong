@@ -5,7 +5,10 @@ import com.alibaba.excel.util.StringUtils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.tencent.wxcloudrun.dao.CompanyMapper;
+import com.tencent.wxcloudrun.entity.Bounds;
+import com.tencent.wxcloudrun.entity.ClusterCompanyRequest;
+import com.tencent.wxcloudrun.entity.Point;
+import com.tencent.wxcloudrun.mapper.CompanyMapper;
 import com.tencent.wxcloudrun.dto.CompanyDTO;
 import com.tencent.wxcloudrun.entity.CompanyEntity;
 import com.tencent.wxcloudrun.excel.CompanyExcel;
@@ -14,6 +17,8 @@ import com.tencent.wxcloudrun.excel.CompanyImportNewListener;
 import com.tencent.wxcloudrun.excel.CompanyNewExcel;
 import com.tencent.wxcloudrun.service.CompanyService;
 import com.tencent.wxcloudrun.tool.utils.GCJ02ToWGS84;
+import com.tencent.wxcloudrun.util.MarkerClustererWithCompany;
+import com.tencent.wxcloudrun.vo.ClusterCompanyResponseVO;
 import com.tencent.wxcloudrun.vo.CompanyDetailVO;
 import com.tencent.wxcloudrun.vo.CompanyVO;
 import lombok.AllArgsConstructor;
@@ -34,7 +39,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 
@@ -72,6 +76,30 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper,CompanyEntity>
         }).collect(Collectors.toList());
 
         return companyVOList;
+    }
+
+    public ClusterCompanyResponseVO getClusterByLongitudeAndLatitude(Map<String,Double> northeast, Map<String,Double> southwest,Integer viewWidth,Integer viewHeight,int clusterRadius) {
+        Double longtitudeNortheast = northeast.get("longitude");//东北经度
+        Double longtitudeSouthwest = southwest.get("longitude");//西南经度
+        Double latitudeNortheast = northeast.get("latitude") ;//东北纬度
+        Double latitudeSouthwest = southwest.get("latitude");//西南纬度
+        List<CompanyEntity> companyEntities = companyMapper.selectCompanyByLongitudeAndLatitude(longtitudeNortheast, longtitudeSouthwest, latitudeNortheast, latitudeSouthwest);
+        GCJ02ToWGS84(companyEntities);
+        List<CompanyDetailVO> companyVOList = companyEntities.stream().map(companyEntity -> {
+            CompanyDetailVO companyDtailVO = new CompanyDetailVO();
+            BeanUtils.copyProperties(companyEntity,companyDtailVO);
+            companyDtailVO.setLongitude(Double.valueOf(companyEntity.getLongitude()));
+            companyDtailVO.setLatitude(Double.valueOf(companyEntity.getLatitude()));
+            return companyDtailVO;
+        }).collect(Collectors.toList());
+        ClusterCompanyRequest clusterRequest = new ClusterCompanyRequest();
+        clusterRequest.setCompanyDetailVOList(companyVOList);
+        clusterRequest.setViewWidth(viewWidth);
+        clusterRequest.setViewHeight(viewHeight);
+        clusterRequest.setClusterRadius(clusterRadius);
+        clusterRequest.setBounds(new Bounds(new Point(longtitudeSouthwest, latitudeSouthwest), new Point(longtitudeNortheast, latitudeNortheast)));
+        ClusterCompanyResponseVO cluster = MarkerClustererWithCompany.cluster(clusterRequest);
+        return cluster;
     }
 
     @Override
