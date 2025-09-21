@@ -12,10 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
-public class CompanyImportListener  extends AnalysisEventListener<CompanyExcel>  {
+public class CompanyImportSecListener extends AnalysisEventListener<CompanyExportExcel>  {
     private final CompanyService companyService;
     // 构造器注入
-    public CompanyImportListener(CompanyServiceImpl companyService) {
+    public CompanyImportSecListener(CompanyServiceImpl companyService) {
         this.companyService = companyService;
     }
 
@@ -24,7 +24,7 @@ public class CompanyImportListener  extends AnalysisEventListener<CompanyExcel> 
 
     // 用于校验
     @Override
-    public void invoke(CompanyExcel data, AnalysisContext context) {
+    public void invoke(CompanyExportExcel data, AnalysisContext context) {
         // 生成实体类
         CompanyEntity company = new CompanyEntity();
         BeanUtils.copyProperties(data,company);
@@ -37,10 +37,17 @@ public class CompanyImportListener  extends AnalysisEventListener<CompanyExcel> 
     @Override
     public void doAfterAllAnalysed(AnalysisContext context) {
         if (!cachedList.isEmpty()) {
-
-            List<CompanyEntity> companyEntities = companyService.setLatitudeAndLongitude(cachedList);
-//            companyService.saveBatch(companyEntities);
-            companyService.saveOrUpdateBatch(companyEntities);
+            companyService.setCompanyId(cachedList);
+            companyService.saveOrUpdateBatch(cachedList);
         }
     }
+
+//    private void getData(List<CompanyEntity> cachList){
+//        List<CompanyEntity> updateList = new ArrayList<>();
+//        List<CompanyEntity> addList = new ArrayList<>();
+//        //获取company的所有数据
+//        for (CompanyEntity companyEntity : cachList) {
+//
+//        }
+//    }
 }

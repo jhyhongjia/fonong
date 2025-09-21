@@ -11,12 +11,12 @@ public class CompanyDetailVO {
     /**
      * 经度
      */
-    private Double longitude;
+    private String longitude;
 
     /**
      * 纬度
      */
-    private Double latitude;
+    private String latitude;
 
     private String custName; // 客户名称
     private String abbr;     // 企业简称

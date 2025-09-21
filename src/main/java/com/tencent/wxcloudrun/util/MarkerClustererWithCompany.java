@@ -48,8 +48,8 @@ public class MarkerClustererWithCompany {
         // 3. 分配点到网格
         Map<String, List<CompanyDetailVO>> gridMap = new HashMap<>();
         for (CompanyDetailVO point : companyPoints) {
-            int x = (int) Math.floor((point.getLongitude() - swLng) / gridLng);
-            int y = (int) Math.floor((point.getLatitude() - swLat) / gridLat);
+            int x = (int) Math.floor((Double.parseDouble(point.getLongitude()) - swLng) / gridLng);
+            int y = (int) Math.floor((Double.parseDouble(point.getLatitude()) - swLat) / gridLat);
             String gridKey = x + "," + y;
 
             gridMap.computeIfAbsent(gridKey, k -> new ArrayList<>()).add(point);
@@ -87,7 +87,7 @@ public class MarkerClustererWithCompany {
 
     // 判断点是否在可视区域内
     private static boolean isPointVisible(CompanyDetailVO p, double swLng, double swLat, double neLng, double neLat) {
-        return p.getLongitude() >= swLng && p.getLongitude() <= neLng
-                && p.getLatitude() >= swLat && p.getLatitude() <= neLat;
+        return Double.parseDouble(p.getLongitude()) >= swLng && Double.parseDouble(p.getLongitude()) <= neLng
+                && Double.parseDouble(p.getLatitude()) >= swLat && Double.parseDouble(p.getLatitude()) <= neLat;
     }
 }

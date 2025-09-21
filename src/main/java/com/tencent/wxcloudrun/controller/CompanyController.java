@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
@@ -51,12 +52,12 @@ public class CompanyController {
 
     /**
      * 根据经纬度获取公司列表
-     * @param companyVO
+     * @param latAndLngDTO
      * @return
      */
     @PostMapping(value = "/company/getByLongitudeAndLatitude")
-    public R<List<CompanyDetailVO>> getCompanyByLongitudeAndLatitude(@RequestBody CompanyVO companyVO) {
-        List<CompanyDetailVO> companyEntityIPage = companyService.selectCompanyListByLongitudeAndLatitude(companyVO.getNortheast(), companyVO.getSouthwest());
+    public R<List<CompanyDetailVO>> getCompanyByLongitudeAndLatitude(@RequestBody LatAndLngDTO latAndLngDTO) {
+        List<CompanyDetailVO> companyEntityIPage = companyService.selectCompanyListByLongitudeAndLatitude(latAndLngDTO.getNortheast(), latAndLngDTO.getSouthwest());
         return R.data(companyEntityIPage);
     }
 
@@ -79,6 +80,24 @@ public class CompanyController {
     @PostMapping(value = "/company/delCompany")
     public R<Boolean> delCompany(@RequestParam List<Long> ids) {
         return R.status(companyService.deleteCompanyList(ids));
+    }
+
+    /**
+     * 导出公司列表
+     * @param response
+     * @return
+     */
+    @PostMapping(value = "/company/exportCompany")
+    public void exportCompany(HttpServletResponse response) {
+        companyService.exportCompany(response);
+    }
+
+    /**
+     * 导入公司列表
+     */
+    @PostMapping("/company/importCompany")
+    public R importCompanyExcel(MultipartFile multipartFile) {
+        return R.status(companyService.importCompanyExcel(multipartFile));
     }
 
 

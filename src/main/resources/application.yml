@@ -14,7 +14,7 @@ server:
   ssl:
     enabled: true
     key-store: classpath:www.fo-nong.cn.jks
-    key-store-password: chipxpr6
+    key-store-password: ydwn4cwg
     keyStoreType: JKS
 spring:
   datasource:

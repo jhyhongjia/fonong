@@ -39,7 +39,6 @@ public class CompanyImportNewListener extends AnalysisEventListener<CompanyNewEx
         if (!cachedList.isEmpty()) {
             companyService.setCompanyId(cachedList);
             companyService.saveBatch(cachedList);
-//            System.out.println( cachedList);
         }
     }
 }

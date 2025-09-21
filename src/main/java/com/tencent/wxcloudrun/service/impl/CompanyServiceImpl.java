@@ -5,18 +5,17 @@ import com.alibaba.excel.util.StringUtils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tencent.wxcloudrun.entity.Bounds;
 import com.tencent.wxcloudrun.entity.ClusterCompanyRequest;
 import com.tencent.wxcloudrun.entity.Point;
+import com.tencent.wxcloudrun.excel.*;
 import com.tencent.wxcloudrun.mapper.CompanyMapper;
 import com.tencent.wxcloudrun.dto.CompanyDTO;
 import com.tencent.wxcloudrun.entity.CompanyEntity;
-import com.tencent.wxcloudrun.excel.CompanyExcel;
-import com.tencent.wxcloudrun.excel.CompanyImportListener;
-import com.tencent.wxcloudrun.excel.CompanyImportNewListener;
-import com.tencent.wxcloudrun.excel.CompanyNewExcel;
 import com.tencent.wxcloudrun.service.CompanyService;
 import com.tencent.wxcloudrun.tool.utils.GCJ02ToWGS84;
+import com.tencent.wxcloudrun.util.ExcelUtil;
 import com.tencent.wxcloudrun.util.MarkerClustererWithCompany;
 import com.tencent.wxcloudrun.vo.ClusterCompanyResponseVO;
 import com.tencent.wxcloudrun.vo.CompanyDetailVO;
@@ -31,12 +30,14 @@ import org.json.JSONObject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -63,6 +64,9 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper,CompanyEntity>
 
     @Override
     public List<CompanyDetailVO> selectCompanyListByLongitudeAndLatitude(Map<String,Double> northeast, Map<String,Double> southwest) {
+        if(CollectionUtils.isEmpty(northeast) || CollectionUtils.isEmpty(southwest)){
+            return Collections.emptyList();
+        }
         Double longtitudeNortheast = northeast.get("longitude");
         Double longtitudeSouthwest = southwest.get("longitude");;
         Double latitudeNortheast = northeast.get("latitude") ;
@@ -72,6 +76,8 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper,CompanyEntity>
         List<CompanyDetailVO> companyVOList = companyEntities.stream().map(companyEntity -> {
             CompanyDetailVO companyDtailVO = new CompanyDetailVO();
             BeanUtils.copyProperties(companyEntity,companyDtailVO);
+            companyDtailVO.setLongitude(companyEntity.getLongitude());
+            companyDtailVO.setLatitude(companyEntity.getLatitude());
             return companyDtailVO;
         }).collect(Collectors.toList());
 
@@ -88,8 +94,8 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper,CompanyEntity>
         List<CompanyDetailVO> companyVOList = companyEntities.stream().map(companyEntity -> {
             CompanyDetailVO companyDtailVO = new CompanyDetailVO();
             BeanUtils.copyProperties(companyEntity,companyDtailVO);
-            companyDtailVO.setLongitude(Double.valueOf(companyEntity.getLongitude()));
-            companyDtailVO.setLatitude(Double.valueOf(companyEntity.getLatitude()));
+            companyDtailVO.setLongitude(companyEntity.getLongitude());
+            companyDtailVO.setLatitude(companyEntity.getLatitude());
             return companyDtailVO;
         }).collect(Collectors.toList());
         ClusterCompanyRequest clusterRequest = new ClusterCompanyRequest();
@@ -120,12 +126,12 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper,CompanyEntity>
             InputStream inputStream = multipartFile.getInputStream();
             EasyExcel.read(inputStream, CompanyNewExcel.class, new CompanyImportNewListener(this))
                     .sheet()
-                    .doRead();//			return Result.success("导入成功");
+                    .doRead();
+            //			return Result.success("导入成功");
         }catch (Exception e){
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         }
     }
-
 
 
     @Override
@@ -168,10 +174,46 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper,CompanyEntity>
 
     @Override
     public void setCompanyId(List<CompanyEntity> companyList) {
-        long lastTimestamp = 0;
-        companyList.forEach( companyEntity->companyEntity.setId(generate()));
+//        companyList.forEach( companyEntity->companyEntity.setId(generate()));
+        companyList.forEach(companyEntity-> {
+            if(companyEntity.getId()==null){
+                companyEntity.setId(generate());
+            }
+        });
     }
 
+    @Override
+    public boolean exportCompany(HttpServletResponse response) {
+        List<CompanyExportExcel> companyExcelList = new ArrayList<>();
+        List<CompanyEntity> list = list();
+        if(list.size()>0){
+            list.forEach(companyEntity->{
+                CompanyExportExcel companyExcel = new CompanyExportExcel();
+                BeanUtils.copyProperties(companyEntity,companyExcel);
+                companyExcelList.add(companyExcel);
+            });
+        }
+        //输出到文件
+        ExcelUtil.export(response, "用户数据" , "用户数据表", companyExcelList, CompanyExportExcel.class);
+
+        return true;
+    }
+
+    @Override
+    public boolean importCompanyExcel(MultipartFile multipartFile) {
+        try {
+            InputStream inputStream = multipartFile.getInputStream();
+            EasyExcel.read(inputStream, CompanyExportExcel.class, new CompanyImportSecListener(this))
+                    .sheet()
+                    .doRead();//			return Result.success("导入成功");
+            log.debug("导入成功");
+            return true;
+        }catch (Exception e){
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            log.debug("导入失败");
+            return false;
+        }
+    }
 
 
     @Override
@@ -246,4 +288,5 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper,CompanyEntity>
         });
 
     }
+
 }

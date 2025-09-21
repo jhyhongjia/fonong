@@ -1,6 +1,8 @@
 package com.tencent.wxcloudrun.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 
 @Data
@@ -8,18 +10,15 @@ import lombok.Data;
 public class CompanyEntity {
     private final static long serialVersionUID = 1L;
 
+    @JsonSerialize(
+            using = ToStringSerializer.class
+    )
     private Long id;
 
-    /**
-     * 经度
-     */
+    /** 经度 */
     private String longitude;
-
-    /**
-     * 纬度
-     */
+    /** 纬度 */
     private String latitude;
-
     //	private String seqNo; // 序号
     private String custName; // 客户名称
     private String abbr;     // 企业简称
@@ -33,6 +32,18 @@ public class CompanyEntity {
     private String contact; // 联系方式
     private String email; // 邮箱
     private String registeredAddress; // 注册地址
+    /** 所属区县 */
+    private String district;
+    /** 园区 */
+    private String park;
+    /** 园区内厂房占地面积（亩） */
+    private Double landArea;
+    /** 园区内厂房建筑面积（亩） */
+    private Double factoryArea;
+    /** 园区内厂房产权（自有/租赁/混合） */
+    private String factoryOwnership;
+    /** 园区内厂房评估价值（万元） */
+    private Double factoryValue;
 //    private String marketingRecommendationLevel; // 营销推荐等级 (v1-v12)
     private String financingIntention; // 融资意向 (L1-L6)
     private String industryCategory; // 行业门类
@@ -53,15 +64,6 @@ public class CompanyEntity {
 //    private String recentCaseInfo; // 近两年立案信息
 //    private Integer recentAdminPenaltyCount; // 近连年行政处罚次数
 
-    /** 土地面积（亩） */
-    private Double landArea;
-
-    /** 厂房面积（亩） */
-    private Double factoryArea;
-
-    /** 厂房产权（自有/租赁/混合） */
-    private String factoryOwnership;
-
     /** 近一年营收（万元） */
     private Double lastYearRevenue;
 
@@ -74,20 +76,18 @@ public class CompanyEntity {
     /** 进出口量（美元/万元） */
     private Double importAndExportVolume;
 
-    /**
-     * 是否我行信贷客户
-     */
+    /** 是否我行信贷客户 */
     private boolean creditCustomer;
 
-    /**
-     * 主营业务
-     */
+    /** 主营业务 */
     private String mainBusiness;
 
-    /**
-     * 营销建议
-     */
+    /**  营销建议 */
     private String marketingSuggestions;
+    /** 他行贷款情况 */
+    private String otherLoan;
+    /** 资产负债率 */
+    private Double debtRatio;
 
 
 
