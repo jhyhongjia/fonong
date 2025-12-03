@@ -66,4 +66,7 @@ public class CompanyExportExcel {
 
     @ExcelProperty(value = {"简称"}, index = 17)
     private String abbr;
+
+    @ExcelProperty(value = {"是否我行信贷客户"}, index = 18)
+    private boolean creditCustomer;
 }

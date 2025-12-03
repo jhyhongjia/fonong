@@ -29,6 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -54,23 +55,34 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper,CompanyEntity>
     @Override
     public IPage<CompanyEntity> selectCompanyPage(Page<CompanyEntity> page, CompanyVO companyVO) {
 //        return page.setRecords(companyMapper.selectCompanyPage(page, companyVO));
-        return companyMapper.selectCompanyPage(page, companyVO);
+        IPage<CompanyEntity> companyEntityIPage = companyMapper.selectCompanyPage(page, companyVO);
+        return companyEntityIPage;
     }
 
     @Override
     public List<CompanyEntity> selectCompanyList(CompanyVO companyVO) {
-        return companyMapper.selectCompanyList(companyVO);
+        List<CompanyEntity> companyEntities = companyMapper.selectCompanyList(companyVO);
+        return companyEntities;
     }
 
     @Override
     public List<CompanyDetailVO> selectCompanyListByLongitudeAndLatitude(Map<String,Double> northeast, Map<String,Double> southwest) {
+        Double longtitudeNortheast;
+        Double longtitudeSouthwest;
+        Double latitudeNortheast ;
+        Double latitudeSouthwest;
         if(CollectionUtils.isEmpty(northeast) || CollectionUtils.isEmpty(southwest)){
-            return Collections.emptyList();
+            longtitudeNortheast = 180D;
+            longtitudeSouthwest = -180D;;
+            latitudeNortheast = 180D ;
+            latitudeSouthwest = 0D;
+        }else{
+            longtitudeNortheast = northeast.get("longitude");
+            longtitudeSouthwest = southwest.get("longitude");;
+            latitudeNortheast = northeast.get("latitude") ;
+            latitudeSouthwest = southwest.get("latitude");
         }
-        Double longtitudeNortheast = northeast.get("longitude");
-        Double longtitudeSouthwest = southwest.get("longitude");;
-        Double latitudeNortheast = northeast.get("latitude") ;
-        Double latitudeSouthwest = southwest.get("latitude");
+
         List<CompanyEntity> companyEntities = companyMapper.selectCompanyByLongitudeAndLatitude(longtitudeNortheast, longtitudeSouthwest, latitudeNortheast, latitudeSouthwest);
         GCJ02ToWGS84(companyEntities);
         List<CompanyDetailVO> companyVOList = companyEntities.stream().map(companyEntity -> {
@@ -200,6 +212,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper,CompanyEntity>
     }
 
     @Override
+    @Transactional
     public boolean importCompanyExcel(MultipartFile multipartFile) {
         try {
             InputStream inputStream = multipartFile.getInputStream();

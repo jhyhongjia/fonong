@@ -8,18 +8,16 @@ public class CompanyDetailVO {
 
     private Long id;
 
-    /**
-     * 经度
-     */
+    /** 经度 */
     private String longitude;
 
-    /**
-     * 纬度
-     */
+    /** 纬度 */
     private String latitude;
 
     private String custName; // 客户名称
     private String abbr;     // 企业简称
     private String industryCategory; // 行业门类
     private String businessStatus; //经营状态
+    /** 是否我行信贷客户 */
+    private boolean creditCustomer;
 }
